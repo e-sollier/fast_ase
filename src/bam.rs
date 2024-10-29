@@ -13,9 +13,9 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
     let tid = contig2tid(&batch.chr,bam.header()).unwrap();
     let fetch_res=bam.fetch((tid,batch.start as i64,batch.end as i64));
     if fetch_res.is_err() {panic!("Failed to fetch region {}:{}-{} in file {}",&batch.chr,batch.start,batch.end,&config.dna);}
-    for r in bam.records() {
-        let record = r.unwrap();
-        if record.mapq()<config.min_mapq {continue;}
+    for record in bam.rc_records()
+        .map(|x| x.expect("Failed to read record in bam file."))
+        .filter(|x| x.mapq()<config.min_mapq) {
         update_variantcounters_record(&record,&mut batch.hashmap_variantcounters,config,false);
     }
 
@@ -37,8 +37,9 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
     let tid_rna = contig2tid(&batch.chr,bam_rna.header()).unwrap();
     let fetch_res=bam_rna.fetch((tid_rna,batch.start as i64,batch.end as i64));
     if fetch_res.is_err() {panic!("Failed to fetch region {}:{}-{} in file {}",&batch.chr,batch.start,batch.end,&config.rna);}
-    for r in bam_rna.records() {
-        let record = r.unwrap();
+    for record in bam_rna.rc_records()
+        .map(|x| x.expect("Failed to read record in bam file."))
+        .filter(|x| x.mapq()<config.min_mapq) {
         update_variantcounters_record(&record,&mut batch.hashmap_variantcounters,config,true);
     }
 
