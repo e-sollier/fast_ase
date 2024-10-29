@@ -39,6 +39,8 @@ Options:
   -h, --help                           Print help
 ```
 
+For the VCF file of common SNPs, you can use [this file for hg19](https://drive.google.com/drive/folders/1_Hj7F-13LHz_o8QpU9nOaDvMJdY4n1eZ?usp=drive_link) or [that file for hg38](https://drive.google.com/drive/folders/1-pxEDiml3kQZC7LDbbSnJ0O6BJGbZ4rQ?usp=drive_link). They were downloaded from https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b151_GRCh37p13/VCF/ and subsetted to SNPs in genes.
+
 ## Workflow
 
 fast_ase is integrated into the nextflow workflow [CompEpigen/wf_WGS](https://github.com/CompEpigen/wf_WGS). This can make it easier to run this tool for a large number of samples.
