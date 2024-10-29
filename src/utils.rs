@@ -8,7 +8,7 @@ pub struct Region{
     pub end: Option<u64>
 }
 
-/// Tool that, given a list of variants, will find the ones heterozygous in the DNA bam file, and count reference and alternative read counts in the RNA bam file for these heterozygous variants.
+/// Tool that, given a list of variants, will select the ones heterozygous in the DNA bam file, and count reference and alternative read counts in the RNA bam file.
 #[derive(Parser,Debug)]
 pub struct Config{
     /// Path to the DNA bam file.
@@ -19,7 +19,7 @@ pub struct Config{
     #[arg(long)]
     pub rna: String,
 
-    /// Path to the vcf file containing variants to genotype.
+    /// Path to the vcf file containing variants to consider.
     #[arg(long)]
     pub vcf:String,
 
@@ -51,7 +51,19 @@ pub struct Config{
     #[arg(long,action)]
     pub indels: bool,
 
-    /// Minimum MAPQ for an alignment to be considered.
+    /// Minimum number of reads supporting the alternative and reference alleles in the DNA bam file for a variant to be considered.
+    #[arg(long,default_value_t = 5)]
+    pub min_allele_count_dna: u32,
+
+    /// Minimum variant allele frequency of the minor allele in the DNA bam file for a variant to be considered.
+    #[arg(long,default_value_t = 0.30)]
+    pub min_vaf_dna: f32,
+
+    /// Minimum coverage in the RNA for a variant to be considered.
+    #[arg(long,default_value_t = 6)]
+    pub min_coverage_rna: u32,
+
+    /// Maximum number of variants to include in a batch (batches are processed in parallel).
     #[arg(long,default_value_t = 20000)]
     pub max_batchsize: u32
 }

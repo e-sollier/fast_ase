@@ -22,9 +22,9 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
     // Filter to only keep heterozygous variants
     for (_,list) in batch.hashmap_variantcounters.iter_mut(){
         list.retain(|variant_counter| {
-            if variant_counter.ref_count_dna>5 && variant_counter.alt_count_dna>5{
+            if variant_counter.ref_count_dna> config.min_allele_count_dna && variant_counter.alt_count_dna>config.min_allele_count_dna {
                 let vaf = (variant_counter.alt_count_dna as f32) / ((variant_counter.alt_count_dna as f32) + (variant_counter.ref_count_dna as f32));
-                return (0.30..=0.70).contains(&vaf);
+                return (config.min_vaf_dna..=1.0-config.min_vaf_dna).contains(&vaf);
             }
             false
         });
@@ -45,7 +45,7 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
 
     // Filter to only keep variants with coverage
     for (_,list) in batch.hashmap_variantcounters.iter_mut(){
-        list.retain(|variant_counter| {variant_counter.ref_count_rna+variant_counter.alt_count_rna>5});
+        list.retain(|variant_counter| {variant_counter.ref_count_rna+variant_counter.alt_count_rna>config.min_coverage_rna});
         list.iter_mut().for_each(|variant_counter| variant_counter.fragments_processed.clear());
     }
     batch.hashmap_variantcounters.retain(|_,l| !l.is_empty());
