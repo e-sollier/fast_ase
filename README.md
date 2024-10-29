@@ -6,7 +6,7 @@ Quickly get allelic read counts to estimate allele-specific expression (ASE).
   - BAM file of whole genome sequencing. Must be indexed.
   - BAM file of RNA-seq. Must be indexed
 - Identify the variants in the VCF file that are heterozygous in the DNA.
-- For those variants, if they are covered in the RNA-seq data, count the numer of reads supporting the reference and alternative alleles.
+- For those variants, count the numer of reads supporting the reference and alternative alleles (if the locus is covered).
 - Outputs a tsv file with the allelic read counts in DNA and RNA.
   
 Output format:
@@ -25,18 +25,36 @@ fast_ase is similar to running [GATK HaplotypeCaller](https://gatk.broadinstitut
 Usage: fast_ase [OPTIONS] --dna <DNA> --rna <RNA> --vcf <VCF> --output <OUTPUT>
 
 Options:
-      --dna <DNA>                      Path to the DNA bam file
-      --rna <RNA>                      Path to the RNA bam file
-      --vcf <VCF>                      Path to the vcf file containing variants to genotype
-  -o, --output <OUTPUT>                Path to the output file
-  -r, --regions <REGIONS>...           Regions to process (if not provided, will process all regions)
-  -t, --threads <THREADS>              Number of threads to use. If not specified, will use all available threads
-      --min-mapq <MIN_MAPQ>            Minimum MAPQ for an alignment to be considered [default: 20]
-      --min-basequal <MIN_BASEQUAL>    Minimum base quality for a base to be considered [default: 20]
-      --keep-duplicates                Specify this option to keep duplicate reads
-      --indels                         Specify this option to only also consider indels in addition to SNVs
-      --max-batchsize <MAX_BATCHSIZE>  Minimum MAPQ for an alignment to be considered [default: 20000]
-  -h, --help                           Print help
+      --dna <DNA>
+          Path to the DNA bam file
+      --rna <RNA>
+          Path to the RNA bam file
+      --vcf <VCF>
+          Path to the vcf file containing variants to consider
+  -o, --output <OUTPUT>
+          Path to the output file
+  -r, --regions <REGIONS>...
+          Regions to process (if not provided, will process all regions)
+  -t, --threads <THREADS>
+          Number of threads to use. If not specified, will use all available threads
+      --min-mapq <MIN_MAPQ>
+          Minimum MAPQ for an alignment to be considered [default: 20]
+      --min-basequal <MIN_BASEQUAL>
+          Minimum base quality for a base to be considered [default: 20]
+      --keep-duplicates
+          Specify this option to keep duplicate reads
+      --indels
+          Specify this option to only also consider indels in addition to SNVs
+      --min-allele-count-dna <MIN_ALLELE_COUNT_DNA>
+          Minimum number of reads supporting the alternative and reference alleles in the DNA bam file for a variant to be considered [default: 5]
+      --min-vaf-dna <MIN_VAF_DNA>
+          Minimum variant allele frequency of the minor allele in the DNA bam file for a variant to be considered [default: 0.3]
+      --min-coverage-rna <MIN_COVERAGE_RNA>
+          Minimum coverage in the RNA for a variant to be considered [default: 6]
+      --max-batchsize <MAX_BATCHSIZE>
+          Maximum number of variants to include in a batch (batches are processed in parallel) [default: 20000]
+  -h, --help
+          Print help
 ```
 
 For the VCF file of common SNPs, you can use [this file for hg19](https://drive.google.com/drive/folders/1_Hj7F-13LHz_o8QpU9nOaDvMJdY4n1eZ?usp=drive_link) or [that file for hg38](https://drive.google.com/drive/folders/1-pxEDiml3kQZC7LDbbSnJ0O6BJGbZ4rQ?usp=drive_link). They were downloaded from https://ftp.ncbi.nih.gov/snp/organisms/human_9606_b151_GRCh37p13/VCF/ and subsetted to SNPs in genes.
