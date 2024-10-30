@@ -15,7 +15,7 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
     if fetch_res.is_err() {panic!("Failed to fetch region {}:{}-{} in file {}",&batch.chr,batch.start,batch.end,&config.dna);}
     for record in bam.rc_records()
         .map(|x| x.expect("Failed to read record in bam file."))
-        .filter(|x| x.mapq()<config.min_mapq) {
+        .filter(|x| x.mapq()>=config.min_mapq) {
         update_variantcounters_record(&record,&mut batch.hashmap_variantcounters,config,false);
     }
 
@@ -39,7 +39,7 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
     if fetch_res.is_err() {panic!("Failed to fetch region {}:{}-{} in file {}",&batch.chr,batch.start,batch.end,&config.rna);}
     for record in bam_rna.rc_records()
         .map(|x| x.expect("Failed to read record in bam file."))
-        .filter(|x| x.mapq()<config.min_mapq) {
+        .filter(|x| x.mapq()>=config.min_mapq) {
         update_variantcounters_record(&record,&mut batch.hashmap_variantcounters,config,true);
     }
 
