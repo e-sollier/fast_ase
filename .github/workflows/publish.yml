@@ -13,17 +13,17 @@ jobs:
     strategy:
       matrix:
         name: [
-            linux,
+#            linux,
             macos
         ]
 
         include:
-          - name: linux
-            os: ubuntu-16.04
-            artifact_name: target/release/fast_ase
-            asset_name: fast_ase-linux
+#          - name: linux
+#            os: ubuntu-20.04
+#            artifact_name: target/release/fast_ase
+#            asset_name: fast_ase-linux
           - name: macos
-            os: macos-11
+            os: macos-12
             artifact_name: target/release/fast_ase
             asset_name: fast_ase-macos
 
@@ -39,7 +39,7 @@ jobs:
       run: cargo build --release
 
     - name: Upload the binary
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.asset_name }}
         path: ${{ matrix.artifact_name }}
