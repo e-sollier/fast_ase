@@ -45,7 +45,7 @@ pub fn process_batch(batch: &mut BatchOfVariants, config: &Config) -> Vec<Varian
 
     // Filter to only keep variants with coverage
     for (_,list) in batch.hashmap_variantcounters.iter_mut(){
-        list.retain(|variant_counter| {variant_counter.ref_count_rna+variant_counter.alt_count_rna>config.min_coverage_rna});
+        list.retain(|variant_counter| {variant_counter.ref_count_rna+variant_counter.alt_count_rna>=config.min_coverage_rna});
         list.iter_mut().for_each(|variant_counter| variant_counter.fragments_processed.clear());
     }
     batch.hashmap_variantcounters.retain(|_,l| !l.is_empty());
