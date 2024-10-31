@@ -19,11 +19,11 @@ jobs:
 
         include:
           - name: linux
-            os: ubuntu-16.04
+            os: ubuntu-20.04
             artifact_name: target/release/fast_ase
             asset_name: fast_ase-linux
           - name: macos
-            os: macos-11
+            os: macos-12
             artifact_name: target/release/fast_ase
             asset_name: fast_ase-macos
 
